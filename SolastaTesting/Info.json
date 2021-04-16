@@ -1,0 +1,12 @@
+{
+  "AssemblyName": "SolastaTesting.dll",
+  "Author": "ImpPhil",
+  "DisplayName": "Solasta mod testing",
+  "EntryMethod": "SolastaTesting.Main.Load",
+  "GameVersion": "0.5.42",
+  "Id": "SolastaTesting",
+  "ManagerVersion": "0.23.0",
+  "Version": "1.0.0",
+  "HomePage": "",
+  "Repository": ""
+}
