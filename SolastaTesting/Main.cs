@@ -58,11 +58,11 @@ namespace SolastaTesting
             Log(nameof(ModAfterDBReady));
 
             DumpAffinityDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance);
-            DumpMonstersWithAffinity(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance);
+            DumpMonstersWithAffinity(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance, true);
             DumpAffinityDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance);
-            DumpMonstersWithAffinity(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance);
+            DumpMonstersWithAffinity(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance, true);
             DumpAffinityDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce);
-            DumpMonstersWithAffinity(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce);
+            DumpMonstersWithAffinity(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce, true);
 
             // TODO: create new ones / modify existing ones?
             DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(new FeatureDefinitionDamageAffinityEx
@@ -77,18 +77,27 @@ namespace SolastaTesting
         /// Show all monsters with specified affinity
         /// </summary>
         /// <param name="affinity"></param>
-        private static void DumpMonstersWithAffinity<T>(T affinity) where T : FeatureDefinitionAffinity
+        private static void DumpMonstersWithAffinity<T>(T affinity, bool? guiPresentation = null) where T : FeatureDefinitionAffinity
         {
-            Log($"---- Monsters with affinity '{affinity.Name}'");
+            Log($"---- Monsters with affinity '{affinity.Name}' and guiPresentation={guiPresentation?.ToString() ?? "(any)"}");
 
             var monsters = DatabaseRepository
                 .GetDatabase<MonsterDefinition>()
                 .GetAllElements()
-                .Where(m => m.Features.OfType<T>().Where(f => !f.GuiPresentation.Hidden).Any(f => f == affinity));
+                .Where(m => m.Features.OfType<T>()
+                    .Where(f => !guiPresentation.HasValue || guiPresentation.Value == !f.GuiPresentation.Hidden)
+                    .Any(f => f == affinity));
 
-            foreach (var m in monsters.OrderBy(m => m.Name))
+            if (!monsters.Any())
             {
-                Log($"{m.Name}");
+                Log("*** no monsters ***");
+            }
+            else
+            {
+                foreach (var m in monsters.OrderBy(m => m.Name))
+                {
+                    Log($"{m.Name}");
+                }
             }
         }
 
