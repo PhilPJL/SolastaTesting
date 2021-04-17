@@ -1,9 +1,7 @@
 ﻿using HarmonyLib;
 using SolastaModApi;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using UnityModManagerNet;
 
@@ -40,7 +38,7 @@ namespace SolastaTesting
         [HarmonyPatch(typeof(MainMenuScreen), "RuntimeLoaded")]
         internal static class MainMenuScreen_RuntimeLoaded_Patch
         {
-            internal static void Postfix(Runtime runtime)
+            internal static void Postfix()
             {
                 ModAfterDBReady();
             }
@@ -57,12 +55,16 @@ namespace SolastaTesting
         {
             Log(nameof(ModAfterDBReady));
 
-            DumpAffinityDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance);
-            DumpMonstersWithAffinity(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance, true);
-            DumpAffinityDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance);
-            DumpMonstersWithAffinity(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance, true);
-            DumpAffinityDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce);
-            DumpMonstersWithAffinity(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce, true);
+            Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance);
+            Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance, true);
+            Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance);
+            Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance, true);
+            Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce);
+            Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce, true);
+
+            Helpers.DumpDefinition(Helpers.Clone(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce));
+
+            var coldResistantMonsters = Helpers.GetMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance, true);
 
             // TODO: create new ones / modify existing ones?
             DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(new FeatureDefinitionDamageAffinityEx
@@ -71,74 +73,6 @@ namespace SolastaTesting
                 // Name = "PsionicBlast"
                 // etc
             });
-        }
-
-        /// <summary>
-        /// Show all monsters with specified affinity
-        /// </summary>
-        /// <param name="affinity"></param>
-        private static void DumpMonstersWithAffinity<T>(T affinity, bool? guiPresentation = null) where T : FeatureDefinitionAffinity
-        {
-            Log($"---- Monsters with affinity '{affinity.Name}' and guiPresentation={guiPresentation?.ToString() ?? "(any)"}");
-
-            var monsters = DatabaseRepository
-                .GetDatabase<MonsterDefinition>()
-                .GetAllElements()
-                .Where(m => m.Features.OfType<T>()
-                    .Where(f => !guiPresentation.HasValue || guiPresentation.Value == !f.GuiPresentation.Hidden)
-                    .Any(f => f == affinity));
-
-            if (!monsters.Any())
-            {
-                Log("*** no monsters ***");
-            }
-            else
-            {
-                foreach (var m in monsters.OrderBy(m => m.Name))
-                {
-                    Log($"{m.Name}");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Dump public properties of FeatureDefinitionDamageAffinity
-        /// </summary>
-        /// <param name="affinity"></param>
-        private static void DumpAffinityDefinition(FeatureDefinitionDamageAffinity affinity)
-        {
-            Log($"---- Affinity properties for '{affinity.Name}'");
-
-            foreach (var p in typeof(FeatureDefinitionDamageAffinity).GetProperties().OrderBy(p => p.Name))
-            {
-                Log($"{p.Name}: {p.GetValue(affinity, null)}");
-            }
-        }
-    }
-
-    /// <summary>
-    /// Possible custom affinity
-    /// </summary>
-    [HarmonyPatch(typeof(FeatureDefinitionDamageAffinity), "ModulateSustainedDamage")]
-    internal class FeatureDefinitionDamageAffinityEx : FeatureDefinitionDamageAffinity
-    {
-        // Additional properties
-        // ...
-
-        /// <summary>
-        /// Patch ModulateSustainedDamage
-        /// </summary>
-        internal static void Postfix(FeatureDefinitionDamageAffinity __instance, string damageType, int damage, List<string> sourceTags, ref int __result)
-        {
-            var fda = __instance as FeatureDefinitionDamageAffinityEx;
-
-            if (fda != null)
-            {
-                // original logic has run and damage calculated will be in __result
-
-                // custom logic here, modify __result 
-            }
-            // else do nothing (or something if required)
         }
     }
 }
