@@ -38,7 +38,7 @@ namespace SolastaTesting
         [HarmonyPatch(typeof(MainMenuScreen), "RuntimeLoaded")]
         internal static class MainMenuScreen_RuntimeLoaded_Patch
         {
-            internal static void Postfix()
+            internal static void Postfix(Runtime runtime)
             {
                 ModAfterDBReady();
             }
@@ -62,17 +62,20 @@ namespace SolastaTesting
             Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce);
             Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce, true);
 
-            Helpers.DumpDefinition(Helpers.Clone(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce));
+            var frfClone = DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce.Clone();
+            Helpers.DumpDefinition(frfClone);
 
-            var coldResistantMonsters = Helpers.GetMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance, true);
+            //var coldResistantMonsters = Helpers.GetMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance, true);
 
-            // TODO: create new ones / modify existing ones?
-            DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(new FeatureDefinitionDamageAffinityEx
-            {
-                // TODO: populate - unfortunately some/most fields are read only -- need to use reflection or Harmony to set them
-                // Name = "PsionicBlast"
-                // etc
-            });
+            //// TODO: create new ones / modify existing ones?
+            //DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(new FeatureDefinitionDamageAffinityEx
+            //{
+            //    // TODO: populate - unfortunately some/most fields are read only -- need to use reflection or Harmony to set them
+            //    // Name = "PsionicBlast"
+            //    // etc
+            //});
+
+            FeatureDefinitionDamageAffinity_ModulateSustainedDamage_ExtraProperties.Apply();
         }
     }
 }

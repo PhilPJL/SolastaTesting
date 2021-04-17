@@ -49,10 +49,9 @@ namespace SolastaTesting
             }
         }
 
-
-        internal static TDef Clone<TDef>(this TDef definition) where TDef : BaseDefinition
+        internal static T Clone<T>(this T original) where T : UnityEngine.Object
         {
-            return UnityEngine.Object.Instantiate(definition);
+            return UnityEngine.Object.Instantiate(original);
         }
     }
 }
