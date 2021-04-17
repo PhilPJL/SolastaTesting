@@ -57,7 +57,7 @@ namespace SolastaTesting
             var feature = DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityForceDamageResistance;
 
             // Get the monsters you want - doesn't have to be this
-            var monsters = Helpers.GetMonstersWithFeatureDefinition(feature);
+            var monstersWithForceResistance = Helpers.GetMonstersWithFeatureDefinition(feature);
 
             // create your feature
             var myFeature = feature.Clone();
@@ -69,12 +69,13 @@ namespace SolastaTesting
             DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(myFeature);
 
             // Add your feature to all the monsters you want
-            foreach (var m in monsters)
+            foreach (var m in monstersWithForceResistance)
             {
                 m.Features.Add(myFeature);
-            }
 
-            // Maybe remove the original one
+                // Maybe remove the original one
+                // m.Features.Remove(feature);
+            }
 
             // Setup the extra data
             ExtraProperties.Add(myFeature, new FeatureDefinitionExtraProperties

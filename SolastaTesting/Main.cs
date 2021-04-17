@@ -55,15 +55,15 @@ namespace SolastaTesting
         {
             Log(nameof(ModAfterDBReady));
 
-            Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance);
-            Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance, true);
-            Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance);
-            Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance, true);
-            Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce);
-            Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce, true);
+            //Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance);
+            //Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance, true);
+            //Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance);
+            //Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance, true);
+            //Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce);
+            //Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce, true);
 
-            var frfClone = DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce.Clone();
-            Helpers.DumpDefinition(frfClone);
+            //var frfClone = DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce.Clone();
+            //Helpers.DumpDefinition(frfClone);
 
             //var coldResistantMonsters = Helpers.GetMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance, true);
 
@@ -75,7 +75,12 @@ namespace SolastaTesting
             //    // etc
             //});
 
+
+            // maybe this is something like what you want
             FeatureDefinitionDamageAffinity_ModulateSustainedDamage_ExtraProperties.Apply();
+
+            // Or this
+            FeatureDefinitionDamageAffinity_ModulateSustainedDamage.Apply();
         }
     }
 }
