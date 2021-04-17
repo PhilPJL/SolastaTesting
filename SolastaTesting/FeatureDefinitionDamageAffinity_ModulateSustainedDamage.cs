@@ -18,15 +18,19 @@ namespace SolastaTesting
         internal static FeatureDefinitionDamageAffinityEx Create(FeatureDefinitionDamageAffinity original, 
             string name, DamageAffinityTypeEx damageAffinity, int flatBonusAmount, double ratio)
         {
-            var retval = new FeatureDefinitionDamageAffinityEx();
+            var retval = new FeatureDefinitionDamageAffinityEx
+            {
+                DamageAffinityTypeEx = damageAffinity,
+                FlatBonusAmount = flatBonusAmount,
+                Ratio = ratio
+            };
 
             // TODO - copy original to retval
+            // AccessTools etc, class builder?
 
             // retval.Name = name;
             // retval.Guid = new guid
-            retval.DamageAffinityTypeEx = damageAffinity;
-            retval.FlatBonusAmount = flatBonusAmount;
-            retval.Ratio = ratio;
+
 
             return retval;
         }
@@ -108,10 +112,15 @@ namespace SolastaTesting
             var myFeature = FeatureDefinitionDamageAffinityEx.Create(feature, "PsionicBlastResistance", 
                 DamageAffinityTypeEx.AttributeAndProficiency, 5, 0.5);
 
+            DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(myFeature);
+
+            // Add your feature to all the monsters you want
             foreach (var m in monsters)
             {
                 m.Features.Add(myFeature);
             }
+
+            // Maybe remove the original one
         }
     }
 }

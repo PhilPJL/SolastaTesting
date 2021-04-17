@@ -10,7 +10,7 @@ namespace SolastaTesting
     [HarmonyPatch(typeof(FeatureDefinitionDamageAffinity), "ModulateSustainedDamage")]
     internal static class FeatureDefinitionDamageAffinity_ModulateSustainedDamage_ExtraProperties
     {
-        // could have prefix or postfix.  Just postfix for simplicity.
+        // could have prefix or postfix.  Just postfix for simplicity of example.
 
         /// <summary>
         /// Store extra data in dictionary - create at app startup after enumerating DatabaseRepository<MonsterDefinition>
@@ -29,7 +29,7 @@ namespace SolastaTesting
                 return;
             }
 
-            // or just look in dictionary, is there extra data for this __instance?
+            // look in dictionary, is there extra data for this __instance?
             if (ExtraProperties.TryGetValue(__instance, out var extraProperties))
             {
                 // custom logic here, modify __result 
@@ -62,15 +62,21 @@ namespace SolastaTesting
             // create your feature
             var myFeature = feature.Clone();
 
-            // Now set name and guid
+            // Now set name and guid so it's unique using
             // AccessTools
             // Traverse
 
+            DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(myFeature);
+
+            // Add your feature to all the monsters you want
             foreach (var m in monsters)
             {
                 m.Features.Add(myFeature);
             }
 
+            // Maybe remove the original one
+
+            // Setup the extra data
             ExtraProperties.Add(myFeature, new FeatureDefinitionExtraProperties
             {
                 DamageAffinityTypeEx = DamageAffinityTypeEx.FlatBonus,
