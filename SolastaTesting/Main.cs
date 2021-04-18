@@ -87,8 +87,6 @@ namespace SolastaTesting
 
                 // Or this
                 //FeatureDefinitionDamageAffinity_ModulateSustainedDamage.Apply();
-
-                Log("When does that disposable dispose?");
             }
         }
     }

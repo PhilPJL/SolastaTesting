@@ -59,18 +59,6 @@ namespace SolastaTesting
         }
     }
 
-    [HarmonyPatch(typeof(GuiCharacter), "FormatHealthLabelAdvanced")]
-    internal static class GuiCharacter_FormatHealthLabelAdvanced
-    {
-        // TODO: where is this used?
-
-        //public void FormatHealthLabelAdvanced(
-        //GuiLabel healthLabel,
-        //GuiLabel maxHealthLabel,
-        //GuiTooltip healthTooltip,
-        //bool inGame)
-    }
-
     [HarmonyPatch(typeof(GuiCharacter), "FormatHealthGauge")]
     internal static class GuiCharacter_FormatHealthGauge
     {
