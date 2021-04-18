@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SolastaTesting
@@ -49,9 +51,15 @@ namespace SolastaTesting
             }
         }
 
-        internal static T Clone<T>(this T original) where T : UnityEngine.Object
+        internal static T Clone<T>(this T original, string name) where T : BaseDefinition
         {
-            return UnityEngine.Object.Instantiate(original);
+            // Shallow copy
+            var clone = UnityEngine.Object.Instantiate(original);
+
+            AccessTools.Field(typeof(T), "guid").SetValue(clone, Guid.NewGuid().ToString("N"));
+            clone.name = name;
+
+            return clone;
         }
     }
 }

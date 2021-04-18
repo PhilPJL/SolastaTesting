@@ -53,24 +53,28 @@ namespace SolastaTesting
 
         internal static void Apply()
         {
+            Main.Log("Apply");
+
             // Start with a resistance that nearly matches the one you want
-            var feature = DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityForceDamageResistance;
+            var feature = DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance;
 
             // Get the monsters you want - doesn't have to be this
             var monstersWithForceResistance = Helpers.GetMonstersWithFeatureDefinition(feature);
 
             // create your feature
-            var myFeature = feature.Clone();
+            var myFeature = feature.Clone("MyFeature2");
 
             // Now set name and guid so it's unique using
             // AccessTools
             // Traverse
 
-            DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(myFeature);
+            //DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(myFeature);
 
             // Add your feature to all the monsters you want
             foreach (var m in monstersWithForceResistance)
             {
+                Main.Log($"Adding MyFeature to monster: {m.Name}.");
+
                 m.Features.Add(myFeature);
 
                 // Maybe remove the original one

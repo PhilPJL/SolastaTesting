@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using SolastaModApi;
+using System;
 using System.Collections.Generic;
 
 namespace SolastaTesting
@@ -14,7 +15,6 @@ namespace SolastaTesting
         public int FlatBonusAmount { get; set; }
         public double Ratio { get; set; }
 
-
         internal static FeatureDefinitionDamageAffinityEx Create(FeatureDefinitionDamageAffinity original, 
             string name, DamageAffinityTypeEx damageAffinity, int flatBonusAmount, double ratio)
         {
@@ -28,9 +28,8 @@ namespace SolastaTesting
             // TODO - copy original to retval
             // AccessTools etc, class builder?
 
-            // retval.Name = name;
-            // retval.Guid = new guid
-
+            AccessTools.Field(retval.GetType(), "guid").SetValue(retval, Guid.NewGuid().ToString("N"));
+            retval.name = name;
 
             return retval;
         }
@@ -102,8 +101,10 @@ namespace SolastaTesting
 
         internal static void Apply()
         {
+            Main.Log("Apply");
+
             // Start with a resistance that nearly matches the one you want
-            var feature = DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityForceDamageResistance;
+            var feature = DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance;
 
             // Get the monsters you want - doesn't have to be this
             var monstersWithForceResistance = Helpers.GetMonstersWithFeatureDefinition(feature);
@@ -112,11 +113,13 @@ namespace SolastaTesting
             var myFeature = FeatureDefinitionDamageAffinityEx.Create(feature, "PsionicBlastResistance", 
                 DamageAffinityTypeEx.AttributeAndProficiency, 5, 0.5);
 
-            DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(myFeature);
+            // DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(myFeature);
 
             // Add your feature to all the monsters you want
             foreach (var m in monstersWithForceResistance)
             {
+                Main.Log($"Adding MyFeature to monster: {m.Name}.");
+
                 m.Features.Add(myFeature);
 
                 // Maybe remove the original one
