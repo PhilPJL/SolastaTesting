@@ -29,12 +29,12 @@ namespace SolastaTesting
             if (__instance.HasHitPointsKnowledge && __instance.RulesetCharacterMonster != null)
             {
                 // Our heros now have enough bestiary knowledge to display the monster hit points
-                // which makes picking of damaged monsters easier that it might be.
+                // which makes picking off damaged monsters easier that it might be.
 
-                // Mod settings
-                // normal 15/28
-                // hide current **/28
-                // hide all **/**
+                // Mod settings todo
+                // normal: 15/28
+                // hide current: 28/28 then **/28, */28
+                // hide all: **/**
 
                 // health colours will still be in effect
 
@@ -119,9 +119,13 @@ namespace SolastaTesting
 
         internal static float GetSteppedHealthRatio(float ratio)
         {
+            // Green
             if (ratio >= 1f) return 1f;
+            // Green
             if (ratio >= 0.5f) return 0.75f;
+            // Orange
             if (ratio >= 0.25f) return 0.5f;
+            // Red
             if (ratio > 0f) return 0.25f;
             return ratio;
         }
