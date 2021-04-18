@@ -107,7 +107,7 @@ namespace SolastaTesting
             var feature = DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance;
 
             // Get the monsters you want - doesn't have to be this
-            var monstersWithForceResistance = Helpers.GetMonstersWithFeatureDefinition(feature);
+            var monstersWithColdResistance = Helpers.GetMonstersWithFeatureDefinition(feature);
 
             // create your feature from the existing one (or create one from scratch if there's a class builder)
             var myFeature = FeatureDefinitionDamageAffinityEx.Create(feature, "PsionicBlastResistance", 
@@ -116,7 +116,7 @@ namespace SolastaTesting
             // DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(myFeature);
 
             // Add your feature to all the monsters you want
-            foreach (var m in monstersWithForceResistance)
+            foreach (var m in monstersWithColdResistance)
             {
                 Main.Log($"Adding MyFeature to monster: {m.Name}.");
 
