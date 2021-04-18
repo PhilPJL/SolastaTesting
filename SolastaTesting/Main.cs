@@ -2,6 +2,7 @@
 using SolastaModApi;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using UnityModManagerNet;
 
@@ -53,34 +54,42 @@ namespace SolastaTesting
         // ENTRY POINT IF YOU NEED SAFE DATABASE ACCESS
         internal static void ModAfterDBReady()
         {
-            Log(nameof(ModAfterDBReady));
+            using (new MethodLogger(nameof(ModAfterDBReady)))
+            {
+                //foreach (var item in Helpers.GetWeapons().Take(25))
+                //{
+                //    Helpers.DumpWeaponDefinition(item);
+                //}
 
-            //Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance);
-            //Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance, true);
-            //Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance);
-            //Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance, true);
-            Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce);
-            //Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce, true);
+                //Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance);
+                //Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance, true);
+                //Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance);
+                //Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance, true);
+                //Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce);
+                //Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce, true);
 
-            var frfClone = DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce.Clone("MyFleshRotForce");
-            Helpers.DumpDefinition(frfClone);
+                //var frfClone = DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityContagionFleshRotForce.Clone("MyFleshRotForce");
+                //Helpers.DumpDefinition(frfClone);
 
-            //var coldResistantMonsters = Helpers.GetMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance, true);
+                //var coldResistantMonsters = Helpers.GetMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityColdResistance, true);
 
-            //// TODO: create new ones / modify existing ones?
-            //DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(new FeatureDefinitionDamageAffinityEx
-            //{
-            //    // TODO: populate - unfortunately some/most fields are read only -- need to use reflection or Harmony to set them
-            //    // Name = "PsionicBlast"
-            //    // etc
-            //});
+                //// TODO: create new ones / modify existing ones?
+                //DatabaseRepository.GetDatabase<FeatureDefinitionDamageAffinity>().Add(new FeatureDefinitionDamageAffinityEx
+                //{
+                //    // TODO: populate - unfortunately some/most fields are read only -- need to use reflection or Harmony to set them
+                //    // Name = "PsionicBlast"
+                //    // etc
+                //});
 
 
-            // maybe this is something like what you want
-            FeatureDefinitionDamageAffinity_ModulateSustainedDamage_ExtraProperties.Apply();
+                // maybe this is something like what you want
+                //FeatureDefinitionDamageAffinity_ModulateSustainedDamage_ExtraProperties.Apply();
 
-            // Or this
-            FeatureDefinitionDamageAffinity_ModulateSustainedDamage.Apply();
+                // Or this
+                //FeatureDefinitionDamageAffinity_ModulateSustainedDamage.Apply();
+
+                Log("When does that disposable dispose?");
+            }
         }
     }
 }

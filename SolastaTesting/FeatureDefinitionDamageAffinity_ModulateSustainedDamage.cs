@@ -64,6 +64,8 @@ namespace SolastaTesting
 
         internal static void Postfix(FeatureDefinitionDamageAffinity __instance, string damageType, int damage, List<string> sourceTags, ref int __result)
         {
+            Main.Log("FeatureDefinitionDamageAffinity_ModulateSustainedDamage(Ex): Enter");
+
             // original logic has run and damage calculated will be in __result
 
             // is this an instance of our custom affinity?

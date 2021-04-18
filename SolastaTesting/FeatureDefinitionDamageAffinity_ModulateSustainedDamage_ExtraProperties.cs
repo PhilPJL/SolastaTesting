@@ -20,6 +20,8 @@ namespace SolastaTesting
 
         internal static void Postfix(FeatureDefinitionDamageAffinity __instance, string damageType, int damage, List<string> sourceTags, ref int __result)
         {
+            Main.Log("FeatureDefinitionDamageAffinity_ModulateSustainedDamage_ExtraProperties: Enter");
+
             // original logic has run and damage calculated so far will be in __result
 
             // can also use __instance.Name/__instance.Guid

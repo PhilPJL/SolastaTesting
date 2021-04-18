@@ -18,6 +18,16 @@ namespace SolastaTesting
                     .Any(f => f == feature));
         }
 
+        internal static IEnumerable<ItemDefinition> GetWeapons()
+        {
+            var items = DatabaseRepository.GetDatabase<ItemDefinition>().GetAllElements();
+
+            Main.Log($"Item count={items.Count()}");
+            Main.Log($"Weapon count={items.Where(item => item.IsWeapon).Count()}");
+
+            return items.Where(item => item.IsWeapon);
+        }
+
         internal static void DumpMonstersWithFeatureDefinition<TFeatureDef>(TFeatureDef feature, bool? guiPresentation = null) where TFeatureDef : FeatureDefinition
         {
             Main.Log($"---- Monsters with affinity '{feature.Name}' and guiPresentation={guiPresentation?.ToString() ?? "(any)"}");
@@ -34,6 +44,23 @@ namespace SolastaTesting
                 {
                     Main.Log($"{m.Name}");
                 }
+            }
+        }
+
+        internal static void DumpWeaponDefinition(ItemDefinition item)
+        {
+            if (!item.IsWeapon)
+            {
+                Main.Log($"{item.Name} isn't a weapon!");
+                return;
+            }
+
+            Main.Log($"{item.Name}, {string.Join(", ", item.WeaponDescription.WeaponTags)}");
+
+            foreach (var form in item.WeaponDescription.EffectDescription.EffectForms)
+            {
+                var df = form.DamageForm;
+                Main.Log($"EffectForm={form.FormType}, Die={df.DiceNumber}, DieType={df.DieType}, Versatile={df.Versatile}, VersatileDie={df.VersatileDieType}, DamageType={df.DamageType}");
             }
         }
 
