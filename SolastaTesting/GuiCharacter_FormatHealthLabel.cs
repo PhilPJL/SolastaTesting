@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace SolastaTesting
 {
-    [HarmonyPatch(typeof(GuiCharacter), "FormatHealthLabel")]
+    //[HarmonyPatch(typeof(GuiCharacter), "FormatHealthLabel")]
     internal static class GuiCharacter_FormatHealthLabel
     {
         private static readonly Regex HitPointRegex = new Regex(@"^<#.{6}>(?<current_hp>\d{1,4})</color>/(?<max_hp>\d{1,4})", RegexOptions.Compiled | RegexOptions.Singleline);
@@ -59,7 +59,7 @@ namespace SolastaTesting
         }
     }
 
-    [HarmonyPatch(typeof(GuiCharacter), "FormatHealthGauge")]
+    //[HarmonyPatch(typeof(GuiCharacter), "FormatHealthGauge")]
     internal static class GuiCharacter_FormatHealthGauge
     {
         internal static void Prefix(GuiCharacter __instance, bool ___healthGaugeDirty, out bool __state)
@@ -119,7 +119,7 @@ namespace SolastaTesting
         }
     }
 
-    [HarmonyPatch(typeof(HealthGaugeGroup), "Refresh")]
+    //[HarmonyPatch(typeof(HealthGaugeGroup), "Refresh")]
     internal static class HealthGaugeGroup_Refresh
     {
         internal static void Postfix(HealthGaugeGroup __instance, RectTransform ___gaugeRect, float ___gaugeMaxWidth)

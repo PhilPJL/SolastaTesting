@@ -1,14 +1,12 @@
 ﻿using HarmonyLib;
-using SolastaModApi;
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using UnityModManagerNet;
 
 namespace SolastaTesting
 {
-    public class Main
+    public static class Main
     {
         [Conditional("DEBUG")]
         internal static void Log(string msg) => Logger.Log(msg);
