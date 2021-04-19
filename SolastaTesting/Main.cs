@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using UnityModManagerNet;
 
@@ -54,10 +55,17 @@ namespace SolastaTesting
         {
             using (new MethodLogger(nameof(ModAfterDBReady)))
             {
-                //foreach (var item in Helpers.GetWeapons().Take(25))
-                //{
-                //    Helpers.DumpWeaponDefinition(item);
-                //}
+                var longsword = Helpers.GetWeapons().Where(w => w.Name.Contains("Longsword")).FirstOrDefault();
+
+                if (longsword != null)
+                {
+                    longsword.DumpDefinition();
+
+                    var defender = longsword.Clone("longsword defender");
+
+                    defender.DumpDefinition();
+                }
+                
 
                 //Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance);
                 //Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance, true);

@@ -26,7 +26,7 @@ namespace SolastaTesting
             // A monster has __instance.RulesetCharacterMonster != null and __instance.RulesetCharacter != null
             // A hero has __instance.RulesetCharacterHero != null and __instance.RulesetCharacter != null
 
-            if (__instance.HasHitPointsKnowledge && __instance.RulesetCharacterMonster != null)
+            if (/*__instance.HasHitPointsKnowledge &&*/ __instance.RulesetCharacterMonster != null)
             {
                 // Our heros now have enough bestiary knowledge to display the monster hit points
                 // which makes picking off damaged monsters easier that it might be.

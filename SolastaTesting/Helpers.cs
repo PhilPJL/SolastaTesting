@@ -47,7 +47,7 @@ namespace SolastaTesting
             }
         }
 
-        internal static void DumpWeaponDefinition(ItemDefinition item)
+        internal static void DumpWeaponDefinition(this ItemDefinition item)
         {
             if (!item.IsWeapon)
             {
@@ -68,7 +68,7 @@ namespace SolastaTesting
         /// Dump public properties of BaseDefinition
         /// </summary>
         /// <param name="affinity"></param>
-        internal static void DumpDefinition<TDef>(TDef definition) where TDef : BaseDefinition
+        internal static void DumpDefinition<TDef>(this TDef definition) where TDef : BaseDefinition
         {
             Main.Log($"---- {typeof(TDef).Name} properties for '{definition.Name}'");
 
