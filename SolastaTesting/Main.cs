@@ -59,11 +59,22 @@ namespace SolastaTesting
 
                 if (longsword != null)
                 {
-                    longsword.DumpDefinition();
+                    //longsword.DumpDefinition();
 
-                    var defender = longsword.Clone("longsword defender");
+                    //Log($"ACM: {longsword.ComputeAttackDamageEnhancement(true, null)}");
+                    //Log($"ACM: {longsword.ComputeAttackHitEnhancement(true, null)}");
 
-                    defender.DumpDefinition();
+                    var defender = longsword.Clone("longsword defender", "17dee48b08434bc88b1b5297eddf5bab");
+
+                    foreach(var ef in defender.WeaponDescription.EffectDescription.EffectForms)
+                    {
+                        ef.DamageForm.DamageBonusTrends.Add(new RuleDefinitions.TrendInfo
+                        {
+                            
+                        });
+                    }
+
+                    //defender.DumpDefinition();
                 }
                 
 
@@ -96,4 +107,5 @@ namespace SolastaTesting
             }
         }
     }
+
 }

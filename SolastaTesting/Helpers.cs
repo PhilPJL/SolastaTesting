@@ -7,7 +7,7 @@ namespace SolastaTesting
 {
     public static class Helpers
     {
-        internal static IEnumerable<MonsterDefinition> 
+        internal static IEnumerable<MonsterDefinition>
             GetMonstersWithFeatureDefinition<TFeatureDef>(TFeatureDef feature, bool? guiPresentation = null) where TFeatureDef : FeatureDefinition
         {
             return DatabaseRepository
@@ -78,12 +78,12 @@ namespace SolastaTesting
             }
         }
 
-        internal static T Clone<T>(this T original, string name) where T : BaseDefinition
+        internal static T Clone<T>(this T original, string name, string guid = null) where T : BaseDefinition
         {
             // Shallow copy
             var clone = UnityEngine.Object.Instantiate(original);
 
-            AccessTools.Field(typeof(T), "guid").SetValue(clone, Guid.NewGuid().ToString("N"));
+            AccessTools.Field(typeof(T), "guid").SetValue(clone, guid ?? Guid.NewGuid().ToString("N"));
             clone.name = name;
 
             return clone;
