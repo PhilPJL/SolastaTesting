@@ -74,7 +74,7 @@ namespace SolastaTesting
 
                                 Main.Log($"AttackEnhancementHelper: Enhancement={enhancement}");
 
-                                return enhancement + 10;
+                                return enhancement + level;
                             }
                         }
                     }
