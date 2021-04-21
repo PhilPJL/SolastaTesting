@@ -87,6 +87,10 @@ namespace SolastaTesting
         }
     }
 
+    /// <summary>
+    /// Ideally we would add/register attributes on our hero based on the class.
+    /// Hardcoded as example.  This code could just as well go straight into RulesetItem.ComputeAttackHit/DamageEnhancement if hard coding.
+    /// </summary>
     [HarmonyPatch(typeof(RulesetEntity), "TryGetAttributeValue")]
     internal static class RulesetEntity_TryGetAttributeValue
     {
