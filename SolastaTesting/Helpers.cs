@@ -88,5 +88,15 @@ namespace SolastaTesting
 
             return clone;
         }
+
+        internal static bool HasClass(this RulesetCharacterHero hero, string className)
+        {
+            if(hero?.ClassesAndLevels != null)
+            {
+                return hero.ClassesAndLevels.Any(kvp => kvp.Key.Name == className);
+            }
+
+            return false;
+        }
     }
 }

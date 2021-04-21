@@ -4,21 +4,13 @@ using System.Linq;
 
 namespace SolastaTesting
 {
-    //class DynamicSlashingDamageForm : DamageForm
-    //{
-    //    public DynamicSlashingDamageForm()
-    //    {
-    //        DamageType = "DynamicDamageTypeSlashing";
-    //    }
-    //}
-
     [HarmonyPatch(typeof(RulesetItem), "ComputeAttackDamageEnhancement")]
     internal static class RulesetItem_ComputeAttackDamageEnhancement
     {
         internal static void Postfix(RulesetItem __instance,
-            IAttributeValueProvider attributeValueProvider, List<RulesetItemProperty> ___dynamicItemProperties,  ref int __result)
+            IAttributeValueProvider attributeValueProvider, List<RulesetItemProperty> ___dynamicItemProperties, ref int __result)
         {
-            // __result contains currently computed ACM
+            // __result contains currently computed ADE
             Main.Log($"ComputeAttackDamageEnhancement: ADE={__result}");
 
             __result += AttackEnhancementHelper.GetEnhancement(__instance, attributeValueProvider, ___dynamicItemProperties, "ADE");
@@ -45,6 +37,9 @@ namespace SolastaTesting
         {
             using (new MethodLogger($"AttackEnhancementHelper:{type}"))
             {
+                // TODO: is the RulesetItem for your scaling weapon?
+                // if( __instance.ItemDefinition.Name != "...." ) // something like that
+
                 var gameManager = ServiceRepository.GetService<IGameService>();
 
                 if (gameManager != null)
@@ -64,23 +59,78 @@ namespace SolastaTesting
 
                         if (level > 0)
                         {
-                            if (___dynamicItemProperties != null)
-                            {
-                                var enhancement = ___dynamicItemProperties
-                                    .OfType<IAttackModificationProvider>()
-                                    .Where(p => p.AttackRollModifierMethod == (RuleDefinitions.AttackModifierMethod)1000) // modify by level
-                                    .Select(p => attributeValueProvider.TryGetAttributeValue($"{type}:{level}"))
-                                    .SingleOrDefault();
+                            // It may possible to modify behaviour using FeatureDefinitionAttackModifier 
+                            //if (___dynamicItemProperties != null)
+                            //{
+                            //    var enhancement = ___dynamicItemProperties
+                            //        .OfType<IAttackModificationProvider>()
+                            //        .Where(p => p.AttackRollModifierMethod == (RuleDefinitions.AttackModifierMethod)1000) // (your AttackModifierMethod)
+                            //        .Select(p => attributeValueProvider.TryGetAttributeValue($"{type}:{level}"))
+                            //        .SingleOrDefault();
 
-                                Main.Log($"AttackEnhancementHelper: Enhancement={enhancement}");
+                            //    Main.Log($"AttackEnhancementHelper: Enhancement={enhancement}");
+                            //    return enhancement + level;
+                            //}
 
-                                return enhancement + level;
-                            }
+                            // But just taking a simple approach.  Try to get the enhancement using attributeValueProvider.
+                            // If the IAttributeValueProvider is your RulesetCharacterHero, then you can possibly add and register additional attributes
+                            // for your hero.  Or just patch TryGetAttributeValue as below.
+                            int enhancement = attributeValueProvider.TryGetAttributeValue($"{type}:{level}");
+                            Main.Log($"AttackEnhancementHelper: Enhancement={enhancement}");
+                            return enhancement;
                         }
                     }
                 }
 
                 return 0;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(RulesetEntity), "TryGetAttributeValue")]
+    internal static class RulesetEntity_TryGetAttributeValue
+    {
+        internal static void Postfix(RulesetEntity __instance, string attributeName, ref int __result)
+        {
+            var hero = __instance as RulesetCharacterHero;
+
+            if (hero != null)// && hero.HasClass("MyClass"))
+            {
+                var originalResult = __result;
+
+                switch (attributeName)
+                {
+                    case "AHE:1":
+                    case "ADE:1":
+                        __result = 1;
+                        break;
+                    case "AHE:2":
+                    case "ADE:2":
+                        __result = 1;
+                        break;
+                    case "AHE:3":
+                    case "ADE:3":
+                        __result = 2;
+                        break;
+                    case "AHE:4":
+                    case "ADE:4":
+                        __result = 2;
+                        break;
+                    case "AHE:5":
+                    case "ADE:5":
+                        __result = 3;
+                        break;
+                    case "AHE:6":
+                    case "ADE:6":
+                        __result = 3;
+                        break;
+                    case "AHE:7":
+                    case "ADE:7":
+                        __result = 4;
+                        break;
+                }
+
+                Main.Log($"Get '{attributeName}' for '{hero.Name}'.  Original value={originalResult}, new value={__result}.");
             }
         }
     }
