@@ -38,7 +38,7 @@ namespace SolastaTesting
     /// <summary>
     /// Patch ModulateSustainedDamage
     /// </summary>
-    [HarmonyPatch(typeof(FeatureDefinitionDamageAffinity), "ModulateSustainedDamage")]
+    //[HarmonyPatch(typeof(FeatureDefinitionDamageAffinity), "ModulateSustainedDamage")]
     internal static class FeatureDefinitionDamageAffinity_ModulateSustainedDamage
     {
 #if false

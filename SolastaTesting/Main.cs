@@ -1,6 +1,9 @@
 ﻿using HarmonyLib;
+using SolastaModApi.Diagnostics;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityModManagerNet;
@@ -53,8 +56,23 @@ namespace SolastaTesting
         // ENTRY POINT IF YOU NEED SAFE DATABASE ACCESS
         internal static void ModAfterDBReady()
         {
-            using (new MethodLogger(nameof(ModAfterDBReady)))
+            using (var logger = new MethodLogger(nameof(ModAfterDBReady)))
             {
+                //logger.Log("Getting dbs");
+
+                //var databases = (Dictionary<Type, object>)AccessTools
+                //    .Field(typeof(DatabaseRepository), "databases")
+                //    .GetValue(null);
+
+                //var path = Path.Combine(Directory.GetCurrentDirectory(), "Dump.text");
+
+                //logger.Log($"Folder={path}");
+
+                //File.WriteAllText(path, string.Join(Environment.NewLine, databases.Select(kvp => kvp.Key.FullName)));
+
+                //logger.Log("Dump complete");
+
+                /*
                 var longsword = Helpers.GetWeapons().Where(w => w.Name.Contains("Longsword")).FirstOrDefault();
 
                 if (longsword != null)
@@ -76,7 +94,9 @@ namespace SolastaTesting
 
                     //defender.DumpDefinition();
                 }
-                
+
+                logger.Log("Just testing");
+                */
 
                 //Helpers.DumpDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance);
                 //Helpers.DumpMonstersWithFeatureDefinition(DatabaseHelper.FeatureDefinitionDamageAffinitys.DamageAffinityBludgeoningResistance, true);

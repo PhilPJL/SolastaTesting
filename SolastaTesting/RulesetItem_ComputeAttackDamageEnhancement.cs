@@ -1,10 +1,11 @@
 ﻿using HarmonyLib;
+using SolastaModApi.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SolastaTesting
 {
-    [HarmonyPatch(typeof(RulesetItem), "ComputeAttackDamageEnhancement")]
+    //[HarmonyPatch(typeof(RulesetItem), "ComputeAttackDamageEnhancement")]
     internal static class RulesetItem_ComputeAttackDamageEnhancement
     {
         internal static void Postfix(RulesetItem __instance,
@@ -17,7 +18,7 @@ namespace SolastaTesting
         }
     }
 
-    [HarmonyPatch(typeof(RulesetItem), "ComputeAttackHitEnhancement")]
+    //[HarmonyPatch(typeof(RulesetItem), "ComputeAttackHitEnhancement")]
     internal static class RulesetItem_ComputeAttackHitEnhancement
     {
         internal static void Postfix(RulesetItem __instance,
@@ -91,7 +92,7 @@ namespace SolastaTesting
     /// Ideally we would add/register attributes on our hero based on the class.
     /// Hardcoded as example.  This code could just as well go straight into RulesetItem.ComputeAttackHit/DamageEnhancement if hard coding.
     /// </summary>
-    [HarmonyPatch(typeof(RulesetEntity), "TryGetAttributeValue")]
+    //[HarmonyPatch(typeof(RulesetEntity), "TryGetAttributeValue")]
     internal static class RulesetEntity_TryGetAttributeValue
     {
         internal static void Postfix(RulesetEntity __instance, string attributeName, ref int __result)

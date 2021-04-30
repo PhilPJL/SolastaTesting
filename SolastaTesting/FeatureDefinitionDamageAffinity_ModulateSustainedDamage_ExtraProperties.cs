@@ -7,7 +7,7 @@ namespace SolastaTesting
     /// <summary>
     /// Patch ModulateSustainedDamage
     /// </summary>
-    [HarmonyPatch(typeof(FeatureDefinitionDamageAffinity), "ModulateSustainedDamage")]
+    //[HarmonyPatch(typeof(FeatureDefinitionDamageAffinity), "ModulateSustainedDamage")]
     internal static class FeatureDefinitionDamageAffinity_ModulateSustainedDamage_ExtraProperties
     {
         // could have prefix or postfix.  Just postfix for simplicity of example.
