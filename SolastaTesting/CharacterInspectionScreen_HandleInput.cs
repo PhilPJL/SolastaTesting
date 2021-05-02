@@ -6,13 +6,14 @@ using System.Linq;
 
 namespace SolastaTesting
 {
-    [HarmonyPatch(typeof(CharacterInspectionScreen), "HandleInput")]
+    //[HarmonyPatch(typeof(CharacterInspectionScreen), "HandleInput")]
     internal static class CharacterInspectionScreen_HandleInput
     {
         public static bool Prefix(CharacterInspectionScreen __instance, InputCommands.Id command)
         {
             switch (command)
             {
+                // Handle 'E' for 'Export'
                 case InputCommands.Id.RotateCCW:
                     SaveCharacter();
                     break;
@@ -28,6 +29,7 @@ namespace SolastaTesting
                 {
                     var heroCharacter = __instance.InspectedCharacter.RulesetCharacterHero;
 
+                    // record current name, etc..
                     var name = heroCharacter.Name;
                     var builtin = heroCharacter.BuiltIn;
                     var guid = heroCharacter.Guid;
@@ -36,17 +38,20 @@ namespace SolastaTesting
                     var conditions = heroCharacter.ConditionsByCategory.ToList();
                     var powers = heroCharacter.PowersUsedByMe.ToList();
                     var spells = heroCharacter.SpellsCastByMe.ToList();
-                    var items = new List<RulesetItem>();
-                    heroCharacter.CharacterInventory.EnumerateAllItems(items);
-                    var attunedItems = items.Select(i => new { Item = i, Name = i.AttunedToCharacter }).ToList();
+                    var inventoryItems = new List<RulesetItem>();
+                    heroCharacter.CharacterInventory.EnumerateAllItems(inventoryItems);
+                    var attunedItems = inventoryItems.Select(i => new { Item = i, Name = i.AttunedToCharacter }).ToList();
 
-                    logger.Log($"Is built in={builtin}, guid={guid}.");
+                    // record item guids
+                    var heroItemGuids = heroCharacter.Items.Select(i => new { Item = i, i.Guid }).ToList();
+                    var inventoryItemGuids = inventoryItems.Select(i => new { Item = i, i.Guid }).ToList();
 
                     try
                     {
-                        // TODO: need UI to allow user to change name on export
-                        // TODO: initially use convention = name-nnn.sav
-                        heroCharacter.Name = "Exp" + name;
+                        // TODO: update to use convention = name-nnn.sav
+                        // TODO: then need UI to allow user to change name on export
+                        // For now just add EX-
+                        heroCharacter.Name = "EX-" + name;
                         heroCharacter.BuiltIn = false;
 
                         // remove active conditions (or filter out during serialization)
@@ -62,8 +67,18 @@ namespace SolastaTesting
                             item.Item.AttunedToCharacter = string.Empty;
                         }
 
-                        // TODO: should this be 0 or not?
+                        // clear guids
                         AccessTools.Field(heroCharacter.GetType(), "guid").SetValue(heroCharacter, 0UL);
+
+                        foreach(var item in heroItemGuids)
+                        {
+                            AccessTools.Field(item.Item.GetType(), "guid").SetValue(item.Item, 0UL);
+                        }
+
+                        foreach(var item in inventoryItemGuids)
+                        {
+                            AccessTools.Field(item.Item.GetType(), "guid").SetValue(item.Item, 0UL);
+                        }
 
                         ServiceRepository
                             .GetService<ICharacterPoolService>()
@@ -76,7 +91,6 @@ namespace SolastaTesting
                         // restore original values
                         heroCharacter.Name = name;
                         heroCharacter.BuiltIn = builtin;
-                        AccessTools.Field(heroCharacter.GetType(), "guid").SetValue(heroCharacter, guid);
 
                         // restore conditions
                         foreach (var kvp in conditions)
@@ -90,13 +104,26 @@ namespace SolastaTesting
 
                         // restore attunement
                         foreach (var item in attunedItems) { item.Item.AttunedToCharacter = item.Name; }
+
+                        // restore guids
+                        AccessTools.Field(heroCharacter.GetType(), "guid").SetValue(heroCharacter, guid);
+
+                        foreach (var item in heroItemGuids)
+                        {
+                            AccessTools.Field(item.Item.GetType(), "guid").SetValue(item.Item, item.Guid);
+                        }
+
+                        foreach (var item in inventoryItemGuids)
+                        {
+                            AccessTools.Field(item.Item.GetType(), "guid").SetValue(item.Item, item.Guid);
+                        }
                     }
                 }
             }
         }
     }
 
-    [HarmonyPatch(typeof(RulesetInventory), "SerializeElements")]
+    //[HarmonyPatch(typeof(RulesetInventory), "SerializeElements")]
     internal static class RulesetInventory_SerializeElements
     {
         static readonly object Locker = new object();
@@ -110,7 +137,7 @@ namespace SolastaTesting
                 if (registeredService == null)
                 {
                     Main.Log("Adding DummyRulesetEntityService");
-                    ServiceRepository.AddService<IRulesetEntityService>(DummyRulesetEntityService.Instance);
+                    ServiceRepository.AddService(DummyRulesetEntityService.Instance);
                 }
             }
         }
@@ -136,7 +163,10 @@ namespace SolastaTesting
         }
     }
 
-    class DummyRulesetEntityService : IRulesetEntityService, IModService
+    /// <summary>
+    /// Required during de-serialization in the character inspection screen to prevent null-ref exceptions
+    /// </summary>
+    class DummyRulesetEntityService : IRulesetEntityService
     {
         public static IRulesetEntityService Instance => new DummyRulesetEntityService();
 
@@ -151,7 +181,7 @@ namespace SolastaTesting
 
         public ulong GenerateGuid()
         {
-            Main.Log("Creating guid");
+            Main.Log("GenerateGuid");
             return 0;
         }
 
@@ -162,11 +192,16 @@ namespace SolastaTesting
                 if (rulesetEntity is RulesetItem)
                 {
                     var ri = rulesetEntity as RulesetItem;
-                    Main.Log($"RegisterEntity: Name={ri?.ItemDefinition?.Name}, Guid={ri?.ItemDefinition?.GUID}");
+                    Main.Log($"RegisterEntity: Type= {rulesetEntity.GetType().FullName}, Name={ri?.ItemDefinition?.Name}, Guid={ri?.ItemDefinition?.GUID}");
+                }
+                else if (rulesetEntity is RulesetItemProperty)
+                {
+                    var ri = rulesetEntity as RulesetItemProperty;
+                    Main.Log($"RegisterEntity: Type= {rulesetEntity.GetType().FullName}, Name={ri?.FeatureDefinition?.Name}, Guid={ri?.FeatureDefinition?.GUID}");
                 }
                 else
                 {
-                    //Main.Log($"RegisterEntity: {rulesetEntity?.Name}");
+                    Main.Log($"RegisterEntity: Type={rulesetEntity.GetType().FullName}, {rulesetEntity?.Name}");
                 }
 
                 RulesetEntities.Add(rulesetEntity.Guid, rulesetEntity);
@@ -186,8 +221,11 @@ namespace SolastaTesting
         public void UnregisterEntity(RulesetEntity rulesetEntity)
         {
             Main.Log($"UnregisterEntity: {rulesetEntity?.Guid}");
+
+            if (rulesetEntity != null)
+            {
+                RulesetEntities.Remove(rulesetEntity.Guid);
+            }
         }
     }
-
-    internal interface IModService { }
 }
