@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace SolastaTesting
 {
@@ -40,6 +40,16 @@ namespace SolastaTesting
             }
 
             Main.Log($"RE_SA: Name={name}, Guid={__instance.Guid}, Att cnt={__instance.Attributes?.Count ?? 0}");
+        }
+    }
+
+    //[HarmonyPatch(typeof(AttunementModal), "Load")]
+    internal static class AttunementModal_Load
+    {
+        public static void Postfix(GameObject ___attunementSlotPrefab, RectTransform ___attunementSlotsTable)
+        {
+            Main.Log("Adding prefab");
+            Gui.GetPrefabFromPool(___attunementSlotPrefab, ___attunementSlotsTable);
         }
     }
 }

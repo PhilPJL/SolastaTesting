@@ -227,5 +227,9 @@ namespace SolastaTesting
                 RulesetEntities.Remove(rulesetEntity.Guid);
             }
         }
+
+        public void SwapEntities(RulesetEntity oldRulesetEntity, RulesetEntity newRulesetEntity)
+        {
+        }
     }
 }
