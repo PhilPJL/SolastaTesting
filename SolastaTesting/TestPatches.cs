@@ -1,55 +1,25 @@
-﻿using System;
-using UnityEngine;
+﻿using HarmonyLib;
+using System.Diagnostics.CodeAnalysis;
 
-namespace SolastaTesting
+namespace SolastaTesting;
+
+[HarmonyPatch(typeof(GameManager), "BindPostDatabase")]
+[SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "Patch")]
+internal static class GameManager_BindPostDatabase
 {
-
-    //[HarmonyPatch(typeof(CharacterInspectionScreen), "Show")]
-    //internal static class CharacterInspectionScreen_Show
-    //{
-    //    public static void Prefix(CharacterInspectionScreen __instance, string filename, GuiScreen previousScreen)
-    //    {
-    //        RulesetEntity.DoNotAutoregister = true;
-
-    //        ServiceRepository.AddService(new DummyRulesetEntityService());
-    //    }
-
-    //    public static void Postfix(CharacterInspectionScreen __instance, string filename, GuiScreen previousScreen)
-    //    {
-    //        RulesetEntity.DoNotAutoregister = false;
-
-    //        ServiceRepository.RemoveService<DummyRulesetEntityService>();
-    //    }
-    //}
-
-    //[HarmonyPatch(typeof(RulesetEntity), "SerializeAttributes")]
-    internal static class RulesetEntity_SerializeAttributes
+    internal static void Postfix()
     {
-        public static void Prefix(RulesetEntity __instance, IAttributesSerializer serializer,
-            IVersionProvider versionProvider)
+        Main.Log("Testing: GameManager_BindPostDatabase start");
+
+        ServiceRepository.GetService<IRuntimeService>().RuntimeLoaded += (_) =>
         {
-            string name;
+            Main.Log("Testing: RuntimeLoaded start");
 
-            try
-            {
-                name = __instance.Name;
-            }
-            catch (NullReferenceException)
-            {
-                name = "exception";
-            }
+            ProtectionFromEvilFix.Load();
 
-            Main.Log($"RE_SA: Name={name}, Guid={__instance.Guid}, Att cnt={__instance.Attributes?.Count ?? 0}");
-        }
-    }
+            Main.Log("Testing: RuntimeLoaded end");
+        };
 
-    //[HarmonyPatch(typeof(AttunementModal), "Load")]
-    internal static class AttunementModal_Load
-    {
-        public static void Postfix(GameObject ___attunementSlotPrefab, RectTransform ___attunementSlotsTable)
-        {
-            Main.Log("Adding prefab");
-            Gui.GetPrefabFromPool(___attunementSlotPrefab, ___attunementSlotsTable);
-        }
+        Main.Log("Testing: GameManager_BindPostDatabase end");
     }
 }

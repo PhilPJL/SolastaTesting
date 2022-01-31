@@ -1,0 +1,10 @@
+﻿[*.cs]
+
+# RCS1077: Optimize LINQ method call.
+dotnet_diagnostic.RCS1077.severity = silent
+
+# S1186: Methods should not be empty
+dotnet_diagnostic.S1186.severity = none
+
+# RCS1036: Remove unnecessary blank line.
+dotnet_diagnostic.RCS1036.severity = none
